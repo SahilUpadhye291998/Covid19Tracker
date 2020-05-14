@@ -17,3 +17,24 @@ export const fetchData = async () => {
         };
     }
 };
+export const fetchDailyData = async () => {
+    try {
+        const { data } = await axios.get(
+            "https://covid19.mathdro.id/api/daily"
+        );
+        const modifiedData = data.map(dailyData => {
+            return {
+                confirmed: dailyData.confirmed.total,
+                deaths: dailyData.deaths.total,
+                date: dailyData.reportDate
+            };
+        });
+        console.log(modifiedData);
+        return modifiedData;
+    } catch (error) {
+        console.error(error);
+        return {
+            message: "Some error in fetching Data"
+        };
+    }
+};

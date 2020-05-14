@@ -13,7 +13,7 @@ class App extends React.Component {
     }
     render() {
         return (
-            <div>
+            <div className="App">
                 <Cards data={this.state.data} />
                 <CountryPicker />
                 <Chart />
