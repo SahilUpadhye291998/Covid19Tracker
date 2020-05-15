@@ -1,22 +1,5 @@
 import axios from "axios";
 
-export const fetchData = async () => {
-    try {
-        const { data } = await axios.get("https://covid19.mathdro.id/api");
-        const modifiedData = {
-            confirmed: data.confirmed,
-            recovered: data.recovered,
-            deaths: data.deaths,
-            lastUpdate: data.lastUpdate
-        };
-        return modifiedData;
-    } catch (error) {
-        console.error(error);
-        return {
-            message: "Some error in fetching Data"
-        };
-    }
-};
 export const fetchDailyData = async () => {
     try {
         const { data } = await axios.get(
@@ -29,12 +12,43 @@ export const fetchDailyData = async () => {
                 date: dailyData.reportDate
             };
         });
-        console.log(modifiedData);
         return modifiedData;
     } catch (error) {
         console.error(error);
         return {
             message: "Some error in fetching Data"
         };
+    }
+};
+export const fetchCountry = async () => {
+    try {
+        const {
+            data: { countries }
+        } = await axios.get("https://covid19.mathdro.id/api/countries");
+        const fetchedCountries = countries.map(country => country.name);
+        return fetchedCountries;
+    } catch (error) {
+        console.error(error);
+        return {
+            message: "Some error in fetching Data"
+        };
+    }
+};
+export const fetchData = async country => {
+    let url = "https://covid19.mathdro.id/api/";
+    let changeableUrl = url;
+
+    if (country) {
+        changeableUrl = `${changeableUrl}countries/${country}`;
+    }
+
+    try {
+        const {
+            data: { confirmed, recovered, deaths, lastUpdate }
+        } = await axios.get(changeableUrl);
+
+        return { confirmed, recovered, deaths, lastUpdate };
+    } catch (error) {
+        return error;
     }
 };
